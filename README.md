@@ -5,6 +5,7 @@ This is an implement a PointRend function for Segmentation result refinement.
 The paper can be find at https://arxiv.org/pdf/1912.08193.pdf
 
 ## Usage
+copy the pointGenerate.py to your directory and you are ready to rock.
 ```
 from pointGenerate import getpoint
 my_mask = np.asarray(Image.open("tree_mask.jpg").resize((32,32)))
