@@ -37,6 +37,8 @@ when the mask is 128*128
 
 ## Improvement
 When I was using this, I find the speed is horrible , so I improved the point selection process by storing the process. The point selection process is significantly accelerated while the image is large. However you want to use the old one, just use ```getpoint(new_if_near=False)```. The performance improvement is shown below, and a fancy and totally unnecessary figure is plotted.
+
+
 | #points  | original | improved |
 |---|---|---|
 | 196 | 6.11 ms ± 122 µs  | 1.3 ms ± 8.4 µs |
