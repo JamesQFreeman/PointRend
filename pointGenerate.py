@@ -16,31 +16,76 @@ def _if_near(point, mask, nearest_neighbor):
                 return True
     return False
 
-def getpoint(mask_img, k, beta, training = True, nearest_neighbor=3, inference_threshold = 0.9):
-    
-    if(beta>1 or beta<0): 
-        print("fuck")
-        raise NameError("beta should be in range [0,1]")
-    
-    if(k<0.1): 
-        raise NameError("k should be in range [0.1,infinite]")
 
-    w,h = mask_img.shape[0],mask_img.shape[1]
+# ***
+# *n* It's an example of 1-neighbor
+# ***
+#
+# *****
+# *****
+# **n** It's an example of 2-neighbor
+# *****
+# *****
+#
+# Did you get any of that?
+def _get_edge_k_neighbor(img,k):
+    '''
+    I will say the idea is identical to the
+    the original _is_near, but this implement save the
+    temporal result and thus speed up the whole
+    process by a massive margin when a big amount of
+    points requires calculation.
+
+    This will return a array sized (w,h), 
+    store the max-min value in its neighbor.
+    '''
+    w,h = img.shape
+    padded = np.pad(img, k, 'edge')
+    # this is the result image array
+    res = np.zeros(img.shape)
     
+    # This is the main process
+    for i in range(w):
+        for j in range(h):
+            neighbor = padded[i:i+2*k,j:j+2*k]
+            _max = neighbor.max()
+            _min = neighbor.min()
+            res[i-k,j-k] = (_max-_min)
+    
+    return res
+
+
+def _new_if_near(point, edge_k_neighbor):
+    x, y = point
+    x, y = int(x), int(y)
+    return edge_k_neighbor[x][y]>0
+
+
+def getpoint(mask_img, k, beta, training = True, nearest_neighbor=3, new_if_near = True):
+    w,h = mask_img.shape
     N = int(beta*k*w*h)
     xy_min = [0, 0]
-    xy_max = [w, h]
+    xy_max = [w-1, h-1]
     points = np.random.uniform(low=xy_min, high=xy_max, size=(N,2))
-
-    
+    #print(points)
+    if(beta>1 or beta<0): 
+        print("beta should be in range [0,1]")
+        return NULL
     
     # for the training, the mask is a hard mask
     if training == True:
         if beta ==0: return points
         res = []
-        for p in points:
-            if(_if_near(p,mask_img,nearest_neighbor)):
-                res.append(p)
+        if new_if_near:
+            edge_k_neighbor = _get_edge_k_neighbor(mask_img,nearest_neighbor)
+            for p in points:
+                if _new_if_near(p,edge_k_neighbor):
+                    res.append(p)
+        else:
+            for p in points:
+                if _if_near(p,mask_img,nearest_neighbor):
+                    res.append(p)
+
         others = int((1-beta)*k*w*h)
         not_edge_points = np.random.uniform(low=xy_min, high=xy_max, size=(others,2))
         for p in not_edge_points:
@@ -52,7 +97,7 @@ def getpoint(mask_img, k, beta, training = True, nearest_neighbor=3, inference_t
         res = []
         for i in range(w):
             for j in range(h):
-                if mask_img[i,j] < inference_threshold:
+                if mask_img[i,j] > 0:
                     res.append((i,j))
         return res
     
