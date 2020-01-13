@@ -36,7 +36,7 @@ when the mask is 128*128
 ![mask size 32](./resolution=128.jpg)
 
 ## Improvement
-When I was using this, I find the speed is horrible , so I improved the point selection process by storing the process. The point selection process is significantly accelerated while the image is large. However you want to use the old one, just use ```getpoint(new_if_near=False)```. The performance improvement is shown below, and a fancy and totally unnecessary figure is plotted.
+When I was using this, I find the speed is horrible , so I improved the point selection process by storing the it. The point selection process is significantly accelerated while the image is large. However you want to use the old one, just use ```getpoint(new_if_near=False)```. The performance improvement is shown below, and a fancy but totally unnecessary figure is plotted.
 
 
 | #points  | original          | improved         |
