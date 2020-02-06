@@ -2,7 +2,7 @@
  An numpy-based implement of PointRend
 
 This is an implement a PointRend function for Segmentation result refinement.
-The paper can be find at https://arxiv.org/pdf/1912.08193.pdf
+### [[arxiv]](https://arxiv.org/pdf/1912.08193.pdf) [[Official Implementation: Detectron2]](https://github.com/facebookresearch/detectron2/tree/master/projects/PointRend)
 
 ## Usage
 copy the pointGenerate.py to your directory and you are ready to rock.
